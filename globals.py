@@ -12,3 +12,9 @@ SCREEN_WIDTH=1280
 SCREEN_HEIGHT=720
 HALF_SCREEN_HEIGHT=int(SCREEN_HEIGHT/2)
 
+def init():
+    global road_velocity
+    global road_pos
+    road_velocity = 0
+    road_pos = 0
+

@@ -1,6 +1,7 @@
 import pygame
 import sys
 from pygame.locals import *
+import globals
 from globals import *
 from curved_road import *
 from straight_road import *
@@ -24,8 +25,8 @@ def main():
     dz = 0
     z = 0
 
-    road_pos = 0
-    road_velocity = 0
+    globals.init()
+
     road_acceleration = 2  # Adjust the acceleration value
     road_deacceleration = 1
     road_brake = 5

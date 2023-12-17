@@ -2,14 +2,14 @@ import pygame
 import sys
 from pygame.locals import *
 from globals import *
+import globals
+
 
 def straight_road(road_acceleration, texture_position_threshold, screen, half_texture_position_threshold, light_road, dark_road, ddz, texture_position_acceleration):
     road_deacceleration = 1
     road_brake = 5
     dz=0
     z=0
-    road_pos =0
-    road_velocity = 0
     for i in range(1,200,1):
         pygame.time.Clock().tick(30)
         for event in pygame.event.get():
@@ -19,28 +19,28 @@ def straight_road(road_acceleration, texture_position_threshold, screen, half_te
 
         keys = pygame.key.get_pressed()
         if keys[K_UP]:
-            if road_velocity < 100:
-                road_velocity += road_acceleration
-            road_pos += road_velocity
-            if road_pos >= texture_position_threshold:
-                road_pos = 0
+            if globals.road_velocity < 100:
+                globals.road_velocity += road_acceleration
+            globals.road_pos += globals.road_velocity
+            if globals.road_pos >= texture_position_threshold:
+                globals.road_pos = 0
         elif keys[K_DOWN]:
-            if road_velocity > 0:
-                road_velocity -= road_brake
-            if road_velocity < 0:
-                road_velocity = 0
-            road_pos += road_velocity
-            if road_pos >= texture_position_threshold:
-                road_pos = 0
+            if globals.road_velocity > 0:
+                globals.road_velocity -= road_brake
+            if globals.road_velocity < 0:
+                globals.road_velocity = 0
+            globals.road_pos += globals.road_velocity
+            if globals.road_pos >= texture_position_threshold:
+                globals.road_pos = 0
         else:
-            if road_velocity > 0:
-                road_velocity -= road_deacceleration
-            road_pos += road_velocity
-            if road_pos >= texture_position_threshold:
-                road_pos = 0
+            if globals.road_velocity > 0:
+                globals.road_velocity -= road_deacceleration
+            globals.road_pos += globals.road_velocity
+            if globals.road_pos >= texture_position_threshold:
+                globals.road_pos = 0
 
 
-        texture_position = road_pos
+        texture_position = globals.road_pos
         dz = 0
         z = 0
 
