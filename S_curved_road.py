@@ -23,7 +23,7 @@ def S_curved_road(road_acceleration, texture_position_threshold,screen,font, hal
 
     k=0
 
-    while k<4:
+    while k<3:
         pygame.time.Clock().tick(30)
         
         for event in pygame.event.get():    #wait for events
@@ -56,9 +56,11 @@ def S_curved_road(road_acceleration, texture_position_threshold,screen,font, hal
         if top_segment['position']>=curve_map_lenght:
             top_segment['position']=0
             bottom_segment['dx']=top_segment['dx']
-            top_segment['dx']-=dx  #+0.01 to exit a left curve and -0.01 to exit a right curve
-            top_segment['dx']*=-1
             k+=1
+            if k == 2:
+                top_segment['dx']+=0.01
+            top_segment['dx']*=-1
+            
 
 
         #draw the road

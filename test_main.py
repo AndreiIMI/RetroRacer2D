@@ -37,7 +37,7 @@ def main():
     half_texture_position_threshold = int(texture_position_threshold / 2)
 
     while True:
-        #S_curved_road(road_acceleration, texture_position_threshold,screen,font, half_texture_position_threshold,light_strip, light_road,dark_strip, dark_road, ddz, texture_position_acceleration)
+        S_curved_road(road_acceleration, texture_position_threshold,screen,font, half_texture_position_threshold,light_strip, light_road,dark_strip, dark_road, ddz, texture_position_acceleration)
         hill_road(road_acceleration, texture_position_threshold, screen,font, half_texture_position_threshold, light_road, dark_road, ddz, texture_position_acceleration)
         curve_function(road_acceleration, texture_position_threshold, screen,font, half_texture_position_threshold, light_strip, light_road, dark_strip, dark_road, ddz, texture_position_acceleration, -0.01)
         straight_road(road_acceleration, texture_position_threshold, screen,font, half_texture_position_threshold, light_road, dark_road, ddz, texture_position_acceleration)
