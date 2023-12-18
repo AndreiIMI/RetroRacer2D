@@ -5,22 +5,16 @@ import pygame,sys
 
 
 def curve_function(road_acceleration, texture_position_threshold, screen, half_texture_position_threshold, light_strip, light_road, dark_strip, dark_road, ddz, texture_position_acceleration, dx):
-    dz=0
-    z=0
-    texture_position=0
     curve_map=[0]*HALF_SCREEN_HEIGHT
     curve_map_lenght=len(curve_map)
-    top_segment={'position':0,'dx':dx}  #dx=-0.01 for left curve and dx=0.01 for right curve
+    #dx=-0.01 pentru curba la stanga si dx=0.01 pentru curba la dreapta
+    top_segment={'position':0,'dx':dx}  
     bottom_segment={'position':240,'dx':0}
-    current_x=0
-    dx=0
-    ddx=0
-    curve_speed=2  #this is the speed at witch we traverse the curve
+    #viteza cu care traversam curba
+    curve_speed=2  
     curve_value=0
     road_deacceleration = 1
     road_brake = 5
-    
-    #pygame.key.set_repeat(400, 30)
     k=0
 
     while k<2:
@@ -35,11 +29,6 @@ def curve_function(road_acceleration, texture_position_threshold, screen, half_t
                 
         #Movement controls
         keys = pygame.key.get_pressed()
-        # if keys[K_UP]:
-        #    globals.road_pos+=road_acceleration
-        #    if globals.road_pos>=texture_position_threshold:
-        #       globals.road_pos=0
-        #    top_segment['position']+=curve_speed
         if keys[K_UP]:
             if globals.road_velocity < 100:
                 globals.road_velocity += road_acceleration
@@ -61,16 +50,18 @@ def curve_function(road_acceleration, texture_position_threshold, screen, half_t
             globals.road_pos += globals.road_velocity
             if globals.road_pos >= texture_position_threshold:
                 globals.road_pos = 0
-           #if we reach the curve's end we invert it's incrementation to exit it
+        #cand ajungem in varful curbei ii schimbam incrementarea ca sa iesim din ea
         if top_segment['position']>=curve_map_lenght:
             top_segment['position']=0
             bottom_segment['dx']=top_segment['dx']
-            top_segment['dx']-=dx  #+0.01 to exit a left curve and -0.01 to exit a right curve
+              # +0.01 pentru a iesi dintr-o curba la stanga 
+              # -0.01 pentru a iesi dintr-o curba la dreapta
+            top_segment['dx']-=dx
             top_segment['dx']*=-1
             k+=1
 
 
-        #draw the road
+        #desenarea drumului
         texture_position = globals.road_pos
         dz=0
         z=0
@@ -99,5 +90,3 @@ def curve_function(road_acceleration, texture_position_threshold, screen, half_t
             if texture_position>=texture_position_threshold:
                texture_position=0
         pygame.display.flip()
-    
-

@@ -8,8 +8,6 @@ import globals
 def straight_road(road_acceleration, texture_position_threshold, screen, half_texture_position_threshold, light_road, dark_road, ddz, texture_position_acceleration):
     road_deacceleration = 1
     road_brake = 5
-    dz=0
-    z=0
     for i in range(1,200,1):
         pygame.time.Clock().tick(30)
         for event in pygame.event.get():
