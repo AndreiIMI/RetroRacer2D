@@ -10,7 +10,7 @@ def curve_function(road_acceleration, texture_position_threshold, screen,font, h
     texture_position=0
     curve_map=[0]*HALF_SCREEN_HEIGHT
     curve_map_lenght=len(curve_map)
-    top_segment={'position':0,'dx':0.01}  #dx=-0.01 for left curve and dx=0.01 for right curve
+    top_segment={'position':0,'dx':dx}  #dx=-0.01 for left curve and dx=0.01 for right curve
     bottom_segment={'position':HALF_SCREEN_HEIGHT,'dx':0}
     current_x=0
     dx=0
