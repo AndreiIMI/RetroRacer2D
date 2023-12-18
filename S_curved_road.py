@@ -4,7 +4,7 @@ from pygame.locals import *
 from globals import *
 import globals
 
-def S_curved_road(road_acceleration, texture_position_threshold,screen,font, half_texture_position_threshold,light_strip, light_road, dark_strip, dark_road, ddz, texture_position_acceleration):
+def S_curved_road(road_acceleration, texture_position_threshold,screen,font, half_texture_position_threshold,light_strip, light_road, dark_strip, dark_road, ddz, texture_position_acceleration,S_dir):
     dz = 0
     z = 0
 
@@ -13,7 +13,7 @@ def S_curved_road(road_acceleration, texture_position_threshold,screen,font, hal
 
     curve_map=[0]*HALF_SCREEN_HEIGHT
     curve_map_lenght=len(curve_map)
-    top_segment={'position':0,'dx':0.01}  #dx=-0.01 for left curve and dx=0.01 for right curve
+    top_segment={'position':0,'dx':S_dir}  #dx=-0.01 for left curve and dx=0.01 for right curve
     bottom_segment={'position':HALF_SCREEN_HEIGHT,'dx':0}
     current_x=0
     dx=0
@@ -58,7 +58,7 @@ def S_curved_road(road_acceleration, texture_position_threshold,screen,font, hal
             bottom_segment['dx']=top_segment['dx']
             k+=1
             if k == 2:
-                top_segment['dx']+=0.01
+                top_segment['dx']+=S_dir
             top_segment['dx']*=-1
             
 

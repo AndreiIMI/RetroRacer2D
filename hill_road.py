@@ -5,7 +5,7 @@ from globals import *
 import globals
 
 
-def hill_road(road_acceleration, texture_position_threshold,screen,font, half_texture_position_threshold, light_road, dark_road, ddz, texture_position_acceleration):
+def hill_road(road_acceleration, texture_position_threshold,screen,font, half_texture_position_threshold, light_road, dark_road, ddz, texture_position_acceleration,h_dir):
     texture_position = 0
     #those variables are used to increment texture_position
     dz = 0
@@ -16,13 +16,15 @@ def hill_road(road_acceleration, texture_position_threshold,screen,font, half_te
 
     hill_map=[0]*HALF_SCREEN_HEIGHT
     hill_map_lenght=len(hill_map)
-    top_segment={'position':0,'dy':-0.003}  #dy=-0.005 for a downhill and dy=0.005 for an uphill
+    top_segment={'position':0,'dy':h_dir}  #dy=-0.005 for a downhill and dy=0.005 for an uphill
     bottom_segment={'position':HALF_SCREEN_HEIGHT,'dy':0}
     current_y=0
     dy=0
     ddy=0
     hill_velocity = 0
     hill_acceleration= 1  #this is the speed at witch we traverse the hill
+    if h_dir > 0:
+        hill_acceleration *= 4
     hill_deacceleration = 2
     hill_brake = 10
     old_y_hill_pos=SCREEN_HEIGHT
@@ -105,9 +107,13 @@ def hill_road(road_acceleration, texture_position_threshold,screen,font, half_te
         if top_segment['position']>=hill_map_lenght:
             top_segment['position']=0
             bottom_segment['dy']=top_segment['dy']
-            top_segment['dy']+=0.003  #+0.005 to exit a downhill and -0.005 to exit an uphill
+            top_segment['dy']-=h_dir  #+0.005 to exit a downhill and -0.005 to exit an uphill
             top_segment['dy']*=-1
             k+=1
+            if h_dir < 0:
+                hill_acceleration *= 2
+            else:
+                hill_acceleration /= 4
             #if k == 2:
             #    top_segment['dy']+=0.003
             
