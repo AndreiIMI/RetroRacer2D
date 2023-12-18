@@ -4,13 +4,13 @@ from globals import *
 import pygame,sys
 
 
-def curve_function(road_acceleration, texture_position_threshold, screen,font, half_texture_position_threshold, light_strip, light_road, dark_strip, dark_road, ddz, texture_position_acceleration, dx):
+def curve_function(road_acceleration, texture_position_threshold, screen,font, half_texture_position_threshold, light_strip, light_road, dark_strip, dark_road, ddz, texture_position_acceleration, c_dir):
     dz=0
     z=0
     texture_position=0
     curve_map=[0]*HALF_SCREEN_HEIGHT
     curve_map_lenght=len(curve_map)
-    top_segment={'position':0,'dx':dx}  #dx=-0.01 for left curve and dx=0.01 for right curve
+    top_segment={'position':0,'dx':c_dir}  #dx=-0.01 for left curve and dx=0.01 for right curve
     bottom_segment={'position':HALF_SCREEN_HEIGHT,'dx':0}
     current_x=0
     dx=0
@@ -60,7 +60,7 @@ def curve_function(road_acceleration, texture_position_threshold, screen,font, h
         if top_segment['position']>=curve_map_lenght:
             top_segment['position']=0
             bottom_segment['dx']=top_segment['dx']
-            top_segment['dx']-=dx  #+0.01 to exit a left curve and -0.01 to exit a right curve
+            top_segment['dx']-=c_dir  #+0.01 to exit a left curve and -0.01 to exit a right curve
             top_segment['dx']*=-1
             k+=1
 
