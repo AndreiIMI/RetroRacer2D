@@ -1,13 +1,16 @@
+import pygame
+import sys
 from pygame.locals import *
-import globals
 from globals import *
-import pygame,sys
+import globals
 
+def S_curved_road(road_acceleration, texture_position_threshold,screen,font, half_texture_position_threshold,light_strip, light_road, dark_strip, dark_road, ddz, texture_position_acceleration):
+    dz = 0
+    z = 0
 
-def curve_function(road_acceleration, texture_position_threshold, screen,font, half_texture_position_threshold, light_strip, light_road, dark_strip, dark_road, ddz, texture_position_acceleration, dx):
-    dz=0
-    z=0
-    texture_position=0
+    road_deacceleration = 1
+    road_brake = 5
+
     curve_map=[0]*HALF_SCREEN_HEIGHT
     curve_map_lenght=len(curve_map)
     top_segment={'position':0,'dx':0.01}  #dx=-0.01 for left curve and dx=0.01 for right curve
@@ -17,23 +20,16 @@ def curve_function(road_acceleration, texture_position_threshold, screen,font, h
     ddx=0
     curve_speed=2  #this is the speed at witch we traverse the curve
     curve_value=0
-    road_deacceleration = 1
-    road_brake = 5
-    
-    #pygame.key.set_repeat(400, 30)
+
     k=0
 
-    while k<2:
-        #loop speed limitation
-        #30 frames per second is enought
+    while k<4:
         pygame.time.Clock().tick(30)
         
         for event in pygame.event.get():    #wait for events
             if event.type == QUIT:
                 pygame.quit()
                 sys.exit()
-                
-        #Movement controls
         keys = pygame.key.get_pressed()
         if keys[K_UP]:
             if globals.road_velocity < 100:
@@ -98,4 +94,3 @@ def curve_function(road_acceleration, texture_position_threshold, screen,font, h
         screen.blit(velocity_text, (SCREEN_WIDTH - velocity_text.get_width() - 10, 10))
         pygame.display.flip()
     
-

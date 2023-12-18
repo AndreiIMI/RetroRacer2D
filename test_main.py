@@ -5,6 +5,8 @@ import globals
 from globals import *
 from curved_road import *
 from straight_road import *
+from hill_road import *
+from S_curved_road import *
 
 def main():
 
@@ -35,11 +37,11 @@ def main():
     half_texture_position_threshold = int(texture_position_threshold / 2)
 
     while True:
-        curve_function(road_acceleration, texture_position_threshold, screen, half_texture_position_threshold, light_strip, light_road, dark_strip, dark_road, ddz, texture_position_acceleration, -0.01)
-        straight_road(road_acceleration, texture_position_threshold, screen, half_texture_position_threshold, light_road, dark_road, ddz, texture_position_acceleration)
-        # print(road_velocity, road_pos)
-        # curve_function(road_acceleration, texture_position_threshold, screen, half_texture_position_threshold, light_strip, light_road, dark_strip, dark_road, ddz, texture_position_acceleration, 0.01, road_pos, road_velocity)
-
+        #S_curved_road(road_acceleration, texture_position_threshold,screen,font, half_texture_position_threshold,light_strip, light_road,dark_strip, dark_road, ddz, texture_position_acceleration)
+        hill_road(road_acceleration, texture_position_threshold, screen,font, half_texture_position_threshold, light_road, dark_road, ddz, texture_position_acceleration)
+        #curve_function(road_acceleration, texture_position_threshold, screen,font, half_texture_position_threshold, light_strip, light_road, dark_strip, dark_road, ddz, texture_position_acceleration, -0.01)
+        straight_road(road_acceleration, texture_position_threshold, screen,font, half_texture_position_threshold, light_road, dark_road, ddz, texture_position_acceleration)
+        
 
 
 if __name__ == "__main__":

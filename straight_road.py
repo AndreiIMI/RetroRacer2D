@@ -5,7 +5,7 @@ from globals import *
 import globals
 
 
-def straight_road(road_acceleration, texture_position_threshold, screen, half_texture_position_threshold, light_road, dark_road, ddz, texture_position_acceleration):
+def straight_road(road_acceleration, texture_position_threshold, screen,font, half_texture_position_threshold, light_road, dark_road, ddz, texture_position_acceleration):
     road_deacceleration = 1
     road_brake = 5
     dz=0
@@ -59,4 +59,8 @@ def straight_road(road_acceleration, texture_position_threshold, screen, half_te
 
             if texture_position >= texture_position_threshold:
                 texture_position = 0
+
+        # Render the globals.road_velocity variable on the top right of the screen
+        velocity_text = font.render(f"Speed: {globals.road_velocity}", True, WHITE)
+        screen.blit(velocity_text, (SCREEN_WIDTH - velocity_text.get_width() - 10, 10))
         pygame.display.flip()
