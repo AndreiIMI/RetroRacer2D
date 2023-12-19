@@ -1,4 +1,6 @@
 import pygame
+import time
+from test_main import *
 
 # Initialize Pygame
 pygame.init()
@@ -40,9 +42,11 @@ click1_color = RED
 button_text = "Start Game"
 button1_text = "Exit Game"
 text_color = BLACK
+text3 = "Time:"
 font = pygame.font.Font(None, 36)
 font1 = pygame.font.SysFont('arial',50)
 font2 = pygame.font.Font(None,36)
+font3 = pygame.font.SysFont('arial',30)
 show_button = True
 first = False
 MUSIC_END = pygame.USEREVENT
@@ -73,12 +77,22 @@ def draw_text_general(text,x,y):
     text_rect = text_surface.get_rect(center=(x,y))
     screen.blit(text_surface,text_rect)
 
+def draw_text_general1(text,x,y):
+    text_surface = font2.render(text,True,WHITE)
+    text_rect = text_surface.get_rect(center=(x,y))
+    screen.blit(text_surface,text_rect)
+
+
+
 # Main loop
 running = True
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        if visited == True:
+            pygame.mixer.music.play()
+            visited = False
        
         # Check for mouse events
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -87,7 +101,8 @@ while running:
                 #print("Button Clicked!")  # Replace with your desired functionality
                 sound = pygame.mixer.Sound('button-pressed-38129.mp3')
                 sound.play()
-                button_rect.move(0,0)
+                pygame.mixer.music.stop()
+                main()
             if button_rect1.collidepoint(mouse_pos):
                 sound = pygame.mixer.Sound('button-pressed-38129.mp3')
                 sound.play()
@@ -105,18 +120,21 @@ while running:
             mouse_pos = pygame.mouse.get_pos()
             #button_rect = pygame.Rect(button_x, button_y, button_width, button_height)
             #button_rect1 = pygame.Rect(button1_x,button1_y,button_width,button_height)
-            if visited == True:
-                pygame.mixer.music.play()
-                visited = False
         elif event.type == pygame.USEREVENT:
             pygame.mixer.music.play() 
+    
+    current_time = time.strftime("%H:%M:%S")
+    # Render time as text
+    text2 = font.render(current_time, True, WHITE)  # Rendering text in white color
     # Draw the background image
     screen.blit(background_image,(0,0))
+    screen.blit(text2,(60,80))
 
     # Draw the button
     pygame.draw.rect(screen, button_color,(200,630,200,50))
     draw_text(button_text, text_color,300,660)
     draw_text_general(text1,650,100)
+    draw_text_general1(text3,110,60)
     pygame.draw.rect(screen, button1_color, (1000, 630, 200, 50))
     draw_text(button1_text, text_color, 1100,660)   
     pygame.draw.circle(screen, GRAY, center, radius) 
