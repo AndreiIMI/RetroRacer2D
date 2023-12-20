@@ -28,6 +28,7 @@ def grassy_greens():
 
 
     ddz = 0.0003
+    globals.SKY = (66, 200, 245)
 
     globals.init()
 
