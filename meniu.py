@@ -7,14 +7,11 @@ from night_time_stroll import *
 # Initialize Pygame
 pygame.init()
 
-# Set up the display
 width, height = 1280, 720
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption('Retro Racer 2D')
 
-# Load the background image
 background_image = pygame.image.load('retro2.png')
-# Replace 'background.jpg' with your image path
 background_image1 = pygame.image.load('volume-mute.png')
 background_image2 = pygame.image.load('volume.png')
 background_image = pygame.transform.scale(background_image, (1280, 720))
@@ -65,7 +62,7 @@ button_rect1 = pygame.Rect(1000, 630, 200, 50)
 button_rect2 = pygame.Rect(600,630,200,50)
 visited1 = False
 show_button1 = False
-
+nr = 0
 
 
 # Function to draw text on button
@@ -119,12 +116,13 @@ while running:
                 pygame.draw.rect(screen, button1_color, (1000, 630, 200, 50))
                 draw_text(button1_text, text_color, 1100,660)
                 show_button1 = True
+                visited = False
                    
             elif button_rect.collidepoint(mouse_pos) and visited1 == True:
                sound = pygame.mixer.Sound('button-pressed-38129.mp3')
                sound.play()
                pygame.mixer.music.stop()   
-               sandy_plains()  
+               grassy_greens()  
             if button_rect1.collidepoint(mouse_pos) and visited1 == False:
                 sound = pygame.mixer.Sound('button-pressed-38129.mp3')
                 sound.play()
@@ -135,7 +133,7 @@ while running:
                sound = pygame.mixer.Sound('button-pressed-38129.mp3')
                sound.play()
                pygame.mixer.music.stop()   
-               grassy_greens()  
+               night_time()  
             if button_rect3.collidepoint(mouse_pos):
                 show_button = not show_button
                 if show_button == True:
@@ -146,7 +144,7 @@ while running:
                sound = pygame.mixer.Sound('button-pressed-38129.mp3')
                sound.play()
                pygame.mixer.music.stop()   
-               night_time()      
+               sandy_plains()      
         elif event.type == pygame.MOUSEMOTION:
             mouse_pos = pygame.mouse.get_pos()
             #button_rect = pygame.Rect(button_x, button_y, button_width, button_height)
@@ -155,9 +153,7 @@ while running:
             pygame.mixer.music.play() 
     
     current_time = time.strftime("%H:%M:%S")
-    # Render time as text
-    text2 = font.render(current_time, True, WHITE)  # Rendering text in white color
-    # Draw the background image
+    text2 = font.render(current_time, True, WHITE)
     screen.blit(background_image,(0,0))
     screen.blit(text2,(60,80))
 
