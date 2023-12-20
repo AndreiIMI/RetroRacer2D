@@ -20,7 +20,7 @@ background_image2 = pygame.transform.scale(background_image2,(30,30))
 correct = True
 pygame.mixer.music.load('FIFA World Cup 2002 All Goals.mp3')
 
-# Define colors
+
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 GRAY = (200, 200, 200)
@@ -28,7 +28,6 @@ GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 
 
-# Define button properties
 button_width, button_height = 400, 100
 button_x, button_y = (width - button_width) // 2, (height - button_height) // 2
 button1_x,button1_y = (width - button_width) // 2, (height + button_height) // 2 + 50
@@ -64,8 +63,6 @@ visited1 = False
 show_button1 = False
 nr = 0
 
-
-# Function to draw text on button
 def draw_text(text, color, x, y):
     text_surface = font.render(text, True, color)
     text_rect = text_surface.get_rect(center=(x, y))
@@ -87,19 +84,18 @@ def draw_text_general1(text,x,y):
     text_rect = text_surface.get_rect(center=(x,y))
     screen.blit(text_surface,text_rect)
 
-
-
-# Main loop
+if pygame.mixer.music.get_busy():
+    visited = False
 running = True
 while running:
+    if visited == True:
+        pygame.mixer.music.play()
+        visited = False
+    
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        if visited == True:
-            pygame.mixer.music.play()
-            visited = False
-       
-        # Check for mouse events
+        
         if event.type == pygame.MOUSEBUTTONDOWN:
             mouse_pos = pygame.mouse.get_pos()
             if button_rect.collidepoint(mouse_pos) and visited1 == False:
@@ -116,8 +112,7 @@ while running:
                 pygame.draw.rect(screen, button1_color, (1000, 630, 200, 50))
                 draw_text(button1_text, text_color, 1100,660)
                 show_button1 = True
-                visited = False
-                   
+               
             elif button_rect.collidepoint(mouse_pos) and visited1 == True:
                sound = pygame.mixer.Sound('button-pressed-38129.mp3')
                sound.play()
@@ -149,15 +144,14 @@ while running:
             mouse_pos = pygame.mouse.get_pos()
             #button_rect = pygame.Rect(button_x, button_y, button_width, button_height)
             #button_rect1 = pygame.Rect(button1_x,button1_y,button_width,button_height)
-        elif event.type == pygame.USEREVENT:
-            pygame.mixer.music.play() 
+        if event.type == pygame.USEREVENT:
+            pygame.mixer.music.play()
     
     current_time = time.strftime("%H:%M:%S")
     text2 = font.render(current_time, True, WHITE)
     screen.blit(background_image,(0,0))
     screen.blit(text2,(60,80))
-
-    # Draw the button
+    
     pygame.draw.rect(screen, button_color,(200,630,200,50))
     draw_text(button_text, text_color,300,660)
     draw_text_general(text1,650,100)
@@ -178,8 +172,6 @@ while running:
     else:
         screen.blit(background_image1,(1205,35))
             
-    # Update the display
     pygame.display.update()
 
-# Quit Pygame properly
 pygame.quit()
