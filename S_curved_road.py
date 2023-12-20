@@ -4,7 +4,7 @@ from pygame.locals import *
 from globals import *
 import globals
 
-def S_curved_road(road_acceleration, texture_position_threshold,screen,font, half_texture_position_threshold,light_strip, light_road, dark_strip, dark_road, ddz, texture_position_acceleration, dx):
+def S_curved_road(road_acceleration, texture_position_threshold,screen, half_texture_position_threshold,light_strip, light_road, dark_strip, dark_road, ddz, texture_position_acceleration, dx):
     dz = 0
     z = 0
 
@@ -21,7 +21,7 @@ def S_curved_road(road_acceleration, texture_position_threshold,screen,font, hal
     ddx=0
     curve_speed=5  #this is the speed at witch we traverse the curve
     curve_value=0
-    turn_speed = 8
+    turn_speed = 15
     curve_distance = 0
 
     k=0
@@ -35,20 +35,20 @@ def S_curved_road(road_acceleration, texture_position_threshold,screen,font, hal
                 sys.exit()
         keys = pygame.key.get_pressed()
         if keys[K_UP]:
-            if globals.road_velocity < 150:
+            if globals.road_velocity < 200:
                 globals.road_velocity += road_acceleration
             globals.road_pos += globals.road_velocity
             if globals.road_pos >= texture_position_threshold:
                 globals.road_pos = 0
             top_segment['position']+=curve_speed
             if curve_distance > 60:
-                globals.car.rect.x += curve_speed * curve_dx * (-100)
+                globals.car.rect.x += curve_speed * curve_dx * (-100) * (globals.road_velocity / 100)
             curve_distance += globals.road_velocity / 30
         elif keys[K_DOWN]:
             if globals.road_velocity > 0:
                 globals.road_velocity -= road_brake
                 if curve_distance > 60:
-                    globals.car.rect.x += curve_speed * curve_dx * (-100)
+                    globals.car.rect.x += curve_speed * curve_dx * (-100) * (globals.road_velocity / 100)
                 top_segment['position']+=curve_speed
             if globals.road_velocity < 0:
                 globals.road_velocity = 0
@@ -60,7 +60,7 @@ def S_curved_road(road_acceleration, texture_position_threshold,screen,font, hal
             if globals.road_velocity > 0:
                 globals.road_velocity -= road_deacceleration
                 if curve_distance > 60:
-                    globals.car.rect.x += curve_speed * curve_dx * (-100)
+                    globals.car.rect.x += curve_speed * curve_dx * (-100) * (globals.road_velocity / 100)
                 top_segment['position']+=curve_speed
             globals.road_pos += globals.road_velocity
             if globals.road_pos >= texture_position_threshold:
@@ -88,6 +88,10 @@ def S_curved_road(road_acceleration, texture_position_threshold,screen,font, hal
             globals.car.image = pygame.image.load('car_test.png').convert_alpha()
 
         globals.car.rect.x = max(0, min(globals.car.rect.x, SCREEN_WIDTH - globals.car.rect.width))
+
+        if globals.car.rect.x <= 100 or globals.car.rect.x >= SCREEN_WIDTH - globals.car.rect.width - 100:
+            if globals.road_velocity > 50:
+                globals.road_velocity -= 10
             
 
 
@@ -98,7 +102,7 @@ def S_curved_road(road_acceleration, texture_position_threshold,screen,font, hal
         dx=0
         ddx=0
         current_x=0
-        screen.fill(BLUE)
+        screen.fill(globals.SKY)
         for i in range(HALF_SCREEN_HEIGHT-1,-1,-1):
             if top_segment['position'] < i:
                dx = bottom_segment['dx']
@@ -119,6 +123,9 @@ def S_curved_road(road_acceleration, texture_position_threshold,screen,font, hal
             texture_position+=texture_position_acceleration+z
             if texture_position>=texture_position_threshold:
                texture_position=0
+
+        velocity_text = globals.create_text_with_outline(globals.font, f"Speed: {globals.road_velocity} mph", YELLOW, BLACK)
+        screen.blit(velocity_text, (20, SCREEN_HEIGHT - 80))
 
         globals.all_sprites.update()
         globals.all_sprites.draw(screen)

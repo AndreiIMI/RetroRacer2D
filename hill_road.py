@@ -5,7 +5,7 @@ from globals import *
 import globals
 
 
-def hill_road(road_acceleration, texture_position_threshold,screen,font, half_texture_position_threshold, light_road, dark_road, ddz, texture_position_acceleration, hill_climb):
+def hill_road(road_acceleration, texture_position_threshold,screen, half_texture_position_threshold, light_road, dark_road, ddz, texture_position_acceleration, hill_climb):
     texture_position = 0
     #those variables are used to increment texture_position
     dz = 0
@@ -28,7 +28,8 @@ def hill_road(road_acceleration, texture_position_threshold,screen,font, half_te
     old_y_hill_pos=SCREEN_HEIGHT
     current_y_hill_pos=SCREEN_HEIGHT
     y_hill_pos_difference=0
-    turn_speed = 8
+    turn_speed = 15
+
 
     k=0
     while k < 2:
@@ -44,7 +45,7 @@ def hill_road(road_acceleration, texture_position_threshold,screen,font, half_te
         #Movement controls
         keys = pygame.key.get_pressed()
         if keys[K_UP]:
-            if globals.road_velocity < 150:
+            if globals.road_velocity < 200:
                 globals.road_velocity += road_acceleration
             globals.road_pos += globals.road_velocity
             if globals.road_pos >= texture_position_threshold:
@@ -85,6 +86,10 @@ def hill_road(road_acceleration, texture_position_threshold,screen,font, half_te
             globals.car.image = pygame.image.load('car_test.png').convert_alpha()
 
         globals.car.rect.x = max(0, min(globals.car.rect.x, SCREEN_WIDTH - globals.car.rect.width))
+
+        if globals.car.rect.x <= 100 or globals.car.rect.x >= SCREEN_WIDTH - globals.car.rect.width - 100:
+            if globals.road_velocity > 50:
+                globals.road_velocity -= 10
             
         #draw the road
         texture_position = globals.road_pos
@@ -95,7 +100,7 @@ def hill_road(road_acceleration, texture_position_threshold,screen,font, half_te
         current_y=0
         old_y_hill_pos=SCREEN_HEIGHT
         current_y_hill_pos=SCREEN_HEIGHT
-        screen.fill(BLUE)
+        screen.fill(globals.SKY)
         
 
         for i in range(HALF_SCREEN_HEIGHT - 1, -1, -1):
@@ -128,6 +133,9 @@ def hill_road(road_acceleration, texture_position_threshold,screen,font, half_te
             texture_position += texture_position_acceleration + z
             if texture_position >= texture_position_threshold:
                 texture_position = 0
+
+        velocity_text = globals.create_text_with_outline(globals.font, f"Speed: {globals.road_velocity} mph", YELLOW, BLACK)
+        screen.blit(velocity_text, (20, SCREEN_HEIGHT - 80))
 
         globals.all_sprites.update()
         globals.all_sprites.draw(screen)
