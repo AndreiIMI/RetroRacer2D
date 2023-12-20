@@ -14,7 +14,7 @@ Controale: Folosiți săgețile pentru a controla mașina (și cam atât).
 
 Contribuția fiecărui membru al echipei:
 
-* Ignat Andrei: Meniu + Interfață utilizator.
+* Ignat Andrei: Meniu + UI.
 * Ilie Nicolai și Iacob Andrei: Implementare sectiuni de circuit (drept, curba, deal/vale).
 * Imireanu Andrei: Implementare mașină + texturi pentru circuit.
   
