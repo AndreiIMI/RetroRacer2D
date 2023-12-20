@@ -6,7 +6,8 @@ BLACK=pygame.color.THECOLORS["black"]
 WHITE=pygame.color.THECOLORS["white"]
 RED=pygame.color.THECOLORS["red"]
 GREEN=pygame.color.THECOLORS["green"]
-BLUE=(66, 200, 245)
+global SKY
+SKY = (66, 200, 245)
 YELLOW=pygame.color.THECOLORS["yellow"]
 SCREEN_WIDTH=1280
 SCREEN_HEIGHT=720
@@ -27,8 +28,19 @@ def init():
     global car
     road_velocity = 0
     road_pos = 0
-    font = pygame.font.SysFont('Arial', 30)
+    font = pygame.font.SysFont('Arial', 50)
     car = Car()
     all_sprites = pygame.sprite.Group()
     all_sprites.add(car)
+
+
+def create_text_with_outline(font, text, color, outline_color):
+    # Render the main text
+    text_surface = font.render(text, True, color)
+
+    # Create a larger surface for the text with outline
+    outline_surface = font.render(text, True, outline_color)
+    outline_surface.blit(text_surface, (2, 2))  # Offset the main text to create the outline effect
+
+    return outline_surface
 

@@ -1,6 +1,8 @@
 import pygame
 import time
-from test_main import *
+from sandy_plains import *
+from grassy_greens import *
+from night_time_stroll import *
 
 # Initialize Pygame
 pygame.init()
@@ -35,12 +37,14 @@ button_x, button_y = (width - button_width) // 2, (height - button_height) // 2
 button1_x,button1_y = (width - button_width) // 2, (height + button_height) // 2 + 50
 button_color = GREEN
 button1_color = RED
+button2_color = GREEN
 hover_color = GREEN
 hover1_color = GREEN
 click_color = RED
 click1_color = RED
 button_text = "Start Game"
 button1_text = "Exit Game"
+button2_text = "Nivelul 2"
 text_color = BLACK
 text3 = "Time:"
 font = pygame.font.Font(None, 36)
@@ -53,11 +57,15 @@ MUSIC_END = pygame.USEREVENT
 pygame.mixer.music.set_endevent(MUSIC_END)
 text1 = "Welcome to Retro Racer 2D"
 visited = True
-button_rect2 = pygame.Rect(1205,35,30,30)
+button_rect3 = pygame.Rect(1205,35,30,30)
 center = (1220,50)
 radius = 30
 button_rect = pygame.Rect(200,630,200,50)
 button_rect1 = pygame.Rect(1000, 630, 200, 50)
+button_rect2 = pygame.Rect(600,630,200,50)
+visited1 = False
+show_button1 = False
+
 
 
 # Function to draw text on button
@@ -97,25 +105,48 @@ while running:
         # Check for mouse events
         if event.type == pygame.MOUSEBUTTONDOWN:
             mouse_pos = pygame.mouse.get_pos()
-            if button_rect.collidepoint(mouse_pos):
-                #print("Button Clicked!")  # Replace with your desired functionality
+            if button_rect.collidepoint(mouse_pos) and visited1 == False:
                 sound = pygame.mixer.Sound('button-pressed-38129.mp3')
                 sound.play()
                 pygame.mixer.music.stop()
-                main()
-            if button_rect1.collidepoint(mouse_pos):
+                button_text = "Nivelul 1"
+                button_color = GREEN
+                visited1 = True
+                pygame.draw.rect(screen, button_color,(200,630,200,50))
+                draw_text(button_text, text_color,300,660)
+                button1_text = "Nivelul 3"
+                button1_color = GREEN
+                pygame.draw.rect(screen, button1_color, (1000, 630, 200, 50))
+                draw_text(button1_text, text_color, 1100,660)
+                show_button1 = True
+                   
+            elif button_rect.collidepoint(mouse_pos) and visited1 == True:
+               sound = pygame.mixer.Sound('button-pressed-38129.mp3')
+               sound.play()
+               pygame.mixer.music.stop()   
+               sandy_plains()  
+            if button_rect1.collidepoint(mouse_pos) and visited1 == False:
                 sound = pygame.mixer.Sound('button-pressed-38129.mp3')
                 sound.play()
                 while pygame.mixer.get_busy():
                     pygame.time.Clock().tick(30)
                 running = False
-            if button_rect2.collidepoint(mouse_pos):
+            elif button_rect1.collidepoint(mouse_pos) and visited1 == True:
+               sound = pygame.mixer.Sound('button-pressed-38129.mp3')
+               sound.play()
+               pygame.mixer.music.stop()   
+               grassy_greens()  
+            if button_rect3.collidepoint(mouse_pos):
                 show_button = not show_button
                 if show_button == True:
                     pygame.mixer.music.set_volume(1.0)
                 if show_button == False:
                     pygame.mixer.music.set_volume(0.0)
-                
+            if button_rect2.collidepoint(mouse_pos):
+               sound = pygame.mixer.Sound('button-pressed-38129.mp3')
+               sound.play()
+               pygame.mixer.music.stop()   
+               night_time()      
         elif event.type == pygame.MOUSEMOTION:
             mouse_pos = pygame.mouse.get_pos()
             #button_rect = pygame.Rect(button_x, button_y, button_width, button_height)
@@ -137,7 +168,15 @@ while running:
     draw_text_general1(text3,110,60)
     pygame.draw.rect(screen, button1_color, (1000, 630, 200, 50))
     draw_text(button1_text, text_color, 1100,660)   
+    #pygame.draw.rect(screen, button2_color, (600, 630, 200, 50))
+    #draw_text(button2_text, text_color, 700,660)  
     pygame.draw.circle(screen, GRAY, center, radius) 
+    if show_button1:
+        button2_text = "Nivelul 2"
+        button2_color = GREEN
+        pygame.draw.rect(screen, button2_color, (600, 630, 200, 50))
+        draw_text(button2_text, text_color, 700,660) 
+        
     if show_button:
         screen.blit(background_image2,(1205,35))
     else:
