@@ -5,12 +5,13 @@ from globals import *
 import globals
 
 
-def straight_road(road_acceleration, texture_position_threshold, screen,font, half_texture_position_threshold, light_road, dark_road, ddz, texture_position_acceleration):
+def straight_road(road_acceleration, texture_position_threshold, screen, half_texture_position_threshold, light_road, dark_road, ddz, texture_position_acceleration):
     road_deacceleration = 1
     road_brake = 5
     dz=0
+    turn_speed = 15
     z=0
-    for i in range(1,200,1):
+    for i in range(1,100,1):
         pygame.time.Clock().tick(30)
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -19,11 +20,13 @@ def straight_road(road_acceleration, texture_position_threshold, screen,font, ha
 
         keys = pygame.key.get_pressed()
         if keys[K_UP]:
-            if globals.road_velocity < 100:
+            if globals.road_velocity < 200:
                 globals.road_velocity += road_acceleration
             globals.road_pos += globals.road_velocity
             if globals.road_pos >= texture_position_threshold:
                 globals.road_pos = 0
+            if globals.road_velocity > 200:
+                globals.road_velocity = 200
         elif keys[K_DOWN]:
             if globals.road_velocity > 0:
                 globals.road_velocity -= road_brake
@@ -39,12 +42,27 @@ def straight_road(road_acceleration, texture_position_threshold, screen,font, ha
             if globals.road_pos >= texture_position_threshold:
                 globals.road_pos = 0
 
+        if keys[K_LEFT] and globals.road_velocity > 0:
+            globals.car.rect.x -= turn_speed
+            globals.car.image = pygame.image.load('images/car_left.png').convert_alpha()
+        elif keys[K_RIGHT] and globals.road_velocity > 0:
+            globals.car.rect.x += turn_speed
+            globals.car.image = pygame.image.load('images/car_right.png').convert_alpha()
+        else:
+            globals.car.image = pygame.image.load('images/car_test.png').convert_alpha()
+
+        globals.car.rect.x = max(0, min(globals.car.rect.x, SCREEN_WIDTH - globals.car.rect.width))
+
+        if globals.car.rect.x <= 100 or globals.car.rect.x >= SCREEN_WIDTH - globals.car.rect.width - 100:
+            if globals.road_velocity > 50:
+                globals.road_velocity -= 10
+
 
         texture_position = globals.road_pos
         dz = 0
         z = 0
 
-        screen.fill(BLUE)
+        screen.fill(globals.SKY)
 
         for i in range(HALF_SCREEN_HEIGHT - 1, -1, -1):
             if texture_position < half_texture_position_threshold:
@@ -60,7 +78,19 @@ def straight_road(road_acceleration, texture_position_threshold, screen,font, ha
             if texture_position >= texture_position_threshold:
                 texture_position = 0
 
-        # Render the globals.road_velocity variable on the top right of the screen
-        velocity_text = font.render(f"Speed: {globals.road_velocity}", True, WHITE)
-        screen.blit(velocity_text, (SCREEN_WIDTH - velocity_text.get_width() - 10, 10))
+        velocity_text = globals.create_text_with_outline(globals.font, f"Speed: {globals.road_velocity} mph", YELLOW, BLACK)
+        screen.blit(velocity_text, (20, SCREEN_HEIGHT - 80))
+
+        globals.all_sprites.update()
+        globals.all_sprites.draw(screen)
+
+        # Calculate and format the elapsed time
+        elapsed_time_ms = pygame.time.get_ticks() - globals.start_time  # Elapsed time in milliseconds
+        elapsed_time_sec = elapsed_time_ms // 1000  # Convert milliseconds to seconds
+        minutes = elapsed_time_sec // 60
+        seconds = elapsed_time_sec % 60
+        milliseconds = elapsed_time_ms % 1000
+        timer_text = globals.create_text_with_outline(globals.font, f"Time: {minutes:02}:{seconds:02}:{milliseconds:03}", RED, BLACK)
+        screen.blit(timer_text, (10, 10))
+
         pygame.display.flip()

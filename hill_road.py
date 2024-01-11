@@ -5,7 +5,7 @@ from globals import *
 import globals
 
 
-def hill_road(road_acceleration, texture_position_threshold,screen,font, half_texture_position_threshold, light_road, dark_road, ddz, texture_position_acceleration,h_dir):
+def hill_road(road_acceleration, texture_position_threshold,screen, half_texture_position_threshold, light_road, dark_road, ddz, texture_position_acceleration, hill_climb):
     texture_position = 0
     #those variables are used to increment texture_position
     dz = 0
@@ -16,25 +16,23 @@ def hill_road(road_acceleration, texture_position_threshold,screen,font, half_te
 
     hill_map=[0]*HALF_SCREEN_HEIGHT
     hill_map_lenght=len(hill_map)
-    top_segment={'position':0,'dy':h_dir}  #dy=-0.005 for a downhill and dy=0.005 for an uphill
+    top_segment={'position':0,'dy':hill_climb}
     bottom_segment={'position':HALF_SCREEN_HEIGHT,'dy':0}
     current_y=0
     dy=0
     ddy=0
     hill_velocity = 0
-    hill_acceleration= 1  #this is the speed at witch we traverse the hill
-    if h_dir > 0:
-        hill_acceleration *= 4
+    hill_acceleration = 6  #this is the speed at witch we traverse the hill
     hill_deacceleration = 2
     hill_brake = 10
     old_y_hill_pos=SCREEN_HEIGHT
     current_y_hill_pos=SCREEN_HEIGHT
-    y_hill_pos_difference=0    
+    y_hill_pos_difference=0
+    turn_speed = 15
+
 
     k=0
     while k < 2:
-        #loop speed limitation
-        #30 frames per second is enought
         pygame.time.Clock().tick(30)
 
         for event in pygame.event.get():    #wait for events
@@ -45,77 +43,54 @@ def hill_road(road_acceleration, texture_position_threshold,screen,font, half_te
         #Movement controls
         keys = pygame.key.get_pressed()
         if keys[K_UP]:
-            if globals.road_velocity < 100:
+            if globals.road_velocity < 200:
                 globals.road_velocity += road_acceleration
             globals.road_pos += globals.road_velocity
             if globals.road_pos >= texture_position_threshold:
                 globals.road_pos = 0
+
+            if globals.road_velocity > 200:
+                globals.road_velocity = 200
             
-            ###
-            ##if hill_velocity < 10:
-            ##    hill_velocity += hill_acceleration
             top_segment['position']+=hill_acceleration
-            #if we reach the hill's end we invert it's incrementation to exit it
-            ##if top_segment['position']>=hill_map_lenght:
-            ##   top_segment['position']=0
-            ##   bottom_segment['dy']=top_segment['dy']
-            ##   #top_segment['dy']+=0.005  #+0.005 to exit a downhill and -0.005 to exit an uphill
-            ##   top_segment['dy']*=-1
-            ##   k+=1
-            ###
 
         elif keys[K_DOWN]:
             if globals.road_velocity > 0:
                 globals.road_velocity -= road_brake
+                top_segment['position']+=hill_acceleration
             if globals.road_velocity < 0:
                 globals.road_velocity = 0
             globals.road_pos += globals.road_velocity
             if globals.road_pos >= texture_position_threshold:
                 globals.road_pos = 0
-            ###
-            #if hill_velocity > 0:
-            #    hill_velocity -= hill_acceleration
-            #if hill_velocity < 0:
-            #    hill_velocity = 0
-            #top_segment['position']+=hill_acceleration
-            #if we reach the hill's end we invert it's incrementation to exit it
-            ##if top_segment['position']>=hill_map_lenght:
-            ##   top_segment['position']=0
-            ##   bottom_segment['dy']=top_segment['dy']
-            ##   #top_segment['dy']+=0.005  #+0.005 to exit a downhill and -0.005 to exit an uphill
-            ##   top_segment['dy']*=-1
-            ##   k+=1
-            ###
         else:
             if globals.road_velocity > 0:
                 globals.road_velocity -= road_deacceleration
+                top_segment['position']+=hill_acceleration
             globals.road_pos += globals.road_velocity
             if globals.road_pos >= texture_position_threshold:
                 globals.road_pos = 0
-            ###
-            ##if hill_velocity > 0:
-            ##    hill_velocity -= hill_deacceleration
-            ##top_segment['position']+=hill_acceleration
-            #if we reach the hill's end we invert it's incrementation to exit it
-            ##if top_segment['position']>=hill_map_lenght:
-            ##   top_segment['position']=0
-            ##   bottom_segment['dy']=top_segment['dy']
-            ##   #top_segment['dy']+=0.005  #+0.005 to exit a downhill and -0.005 to exit an uphill
-            ##   top_segment['dy']*=-1
-            ##   k+=1
-            ###
         if top_segment['position']>=hill_map_lenght:
             top_segment['position']=0
             bottom_segment['dy']=top_segment['dy']
-            top_segment['dy']-=h_dir  #+0.005 to exit a downhill and -0.005 to exit an uphill
+            top_segment['dy']-=hill_climb
             top_segment['dy']*=-1
             k+=1
-            if h_dir < 0:
-                hill_acceleration *= 2
-            else:
-                hill_acceleration /= 4
-            #if k == 2:
-            #    top_segment['dy']+=0.003
+
+        if keys[K_LEFT] and globals.road_velocity > 0:
+            globals.car.rect.x -= turn_speed
+            globals.car.image = pygame.image.load('images/car_left.png').convert_alpha()
+        elif keys[K_RIGHT] and globals.road_velocity > 0:
+            globals.car.rect.x += turn_speed
+            globals.car.image = pygame.image.load('images/car_right.png').convert_alpha()
+        else:
+            globals.car.image = pygame.image.load('images/car_test.png').convert_alpha()
+
+        globals.car.rect.x = max(0, min(globals.car.rect.x, SCREEN_WIDTH - globals.car.rect.width))
+
+        if globals.car.rect.x <= 100 or globals.car.rect.x >= SCREEN_WIDTH - globals.car.rect.width - 100:
+            if globals.road_velocity > 50:
+                globals.road_velocity -= 10
             
         #draw the road
         texture_position = globals.road_pos
@@ -126,7 +101,7 @@ def hill_road(road_acceleration, texture_position_threshold,screen,font, half_te
         current_y=0
         old_y_hill_pos=SCREEN_HEIGHT
         current_y_hill_pos=SCREEN_HEIGHT
-        screen.fill(BLUE)
+        screen.fill(globals.SKY)
         
 
         for i in range(HALF_SCREEN_HEIGHT - 1, -1, -1):
@@ -160,12 +135,19 @@ def hill_road(road_acceleration, texture_position_threshold,screen,font, half_te
             if texture_position >= texture_position_threshold:
                 texture_position = 0
 
-        # Render the globals.road_velocity variable on the top right of the screen
-        velocity_text = font.render(f"Speed: {globals.road_velocity}", True, WHITE)
-        screen.blit(velocity_text, (SCREEN_WIDTH - velocity_text.get_width() - 10, 10))
+        velocity_text = globals.create_text_with_outline(globals.font, f"Speed: {globals.road_velocity} mph", YELLOW, BLACK)
+        screen.blit(velocity_text, (20, SCREEN_HEIGHT - 80))
+
+        globals.all_sprites.update()
+        globals.all_sprites.draw(screen)
+
+        if globals.start_time != -1:
+            elapsed_time_ms = pygame.time.get_ticks() - globals.start_time  # Elapsed time in milliseconds
+            elapsed_time_sec = elapsed_time_ms // 1000  # Convert milliseconds to seconds
+            minutes = elapsed_time_sec // 60
+            seconds = elapsed_time_sec % 60
+            milliseconds = elapsed_time_ms % 1000
+            timer_text = globals.create_text_with_outline(globals.font, f"Time: {minutes:02}:{seconds:02}:{milliseconds:03}", RED, BLACK)
+            screen.blit(timer_text, (10, 10))
 
         pygame.display.flip()
-
-
-if __name__ == "__main__":
-    main()
